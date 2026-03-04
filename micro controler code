@@ -1,0 +1,86 @@
+// Motor Driver Pins
+#define IN1 8
+#define IN2 9
+#define IN3 10
+#define IN4 11
+#define ENA 5
+#define ENB 6
+
+// IR Sensor Pins
+#define LEFT_SENSOR 2
+#define RIGHT_SENSOR 3
+
+int motorSpeed = 150;  // Speed (0-255)
+
+void setup() {
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+  pinMode(ENA, OUTPUT);
+  pinMode(ENB, OUTPUT);
+
+  pinMode(LEFT_SENSOR, INPUT);
+  pinMode(RIGHT_SENSOR, INPUT);
+}
+
+void loop() {
+
+  int leftValue = digitalRead(LEFT_SENSOR);
+  int rightValue = digitalRead(RIGHT_SENSOR);
+
+  // Both sensors on black line → Move Forward
+  if (leftValue == LOW && rightValue == LOW) {
+    moveForward();
+  }
+
+  // Left sensor on black → Turn Left
+  else if (leftValue == LOW && rightValue == HIGH) {
+    turnLeft();
+  }
+
+  // Right sensor on black → Turn Right
+  else if (leftValue == HIGH && rightValue == LOW) {
+    turnRight();
+  }
+
+  // Both sensors on white → Stop
+  else {
+    stopMotors();
+  }
+}
+
+void moveForward() {
+  analogWrite(ENA, motorSpeed);
+  analogWrite(ENB, motorSpeed);
+
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+
+void turnLeft() {
+  analogWrite(ENA, motorSpeed);
+  analogWrite(ENB, motorSpeed);
+
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+
+void turnRight() {
+  analogWrite(ENA, motorSpeed);
+  analogWrite(ENB, motorSpeed);
+
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+}
+
+void stopMotors() {
+  analogWrite(ENA, 0);
+  analogWrite(ENB, 0);
+}
